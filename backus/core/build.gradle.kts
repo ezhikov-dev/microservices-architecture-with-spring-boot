@@ -3,7 +3,6 @@ plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring")
 	id("org.springframework.boot")
-	id("io.spring.dependency-management")
 }
 
 val developmentOnly by configurations.creating
@@ -16,13 +15,9 @@ configurations {
 dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	implementation(kotlin("reflect"))
-	implementation(project(":backus:core"))
-	implementation(project(":dal:api"))
-	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	api(project(":backus:backus-api"))
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	runtimeOnly(project(":web-ui"))
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
@@ -42,15 +37,13 @@ springBoot {
 }
 
 tasks {
-	processResources {
-		from("$projectDir/src/main/resources") {
-			into("static")
-		}
-	}
 
 	bootJar {
-		archiveFileName.set(artifactName)
-		exclude("**/*template.yml")
-		launchScript()
+		enabled = false
+	}
+
+	jar {
+		enabled = true
 	}
 }
+
